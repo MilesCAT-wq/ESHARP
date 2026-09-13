@@ -4,13 +4,6 @@ E# is a small, container-bracketed programming language and reference interprete
 
 ---
 
-## Repository Structure
-
-* EInterpreter.c: The tree-walking reference interpreter for E#.
-* *.esh: Native E# programs, syntax tests, and examples.
-* esharp-language/: Official VS Code language extension with syntax highlighting.
-* .hsh files: Header Sharp public library manifests.
-* esharp_lib/: Python wrapper package powered by background E# algorithms.
 
 ---
 
