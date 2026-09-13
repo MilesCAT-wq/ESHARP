@@ -1,0 +1,140 @@
+import [Studio]
+import [math]
+import [lambda]
+
+Func assert(label, condition) [
+    if condition [
+        Studio.print["FAIL: " + label]
+        return false
+    ]
+    return true
+]
+
+Func test_arithmetic() [
+    Var basic = 5 * 4 + 3 - 1
+    Var assoc = 10 - 4 - 3
+    Var prec = 2 + 3 * 4
+    Var rem = 17 % 5
+
+    Var pass = true
+    pass = pass && assert["Basic Precedence", basic == 22]
+    pass = pass && assert["Left Associativity", assoc == 3]
+    pass = pass && assert["Operator Precedence", prec == 14]
+    pass = pass && assert["Modulo Operation", rem == 2]
+    return pass
+]
+
+Func test_strings() [
+    Var greeting = "Hello, "
+    Var target = "E#"
+    Var combined = greeting + target + "!"
+    Var conversion = "Score: " + 99
+
+    Var pass = true
+    pass = pass && assert["String Concatenation", combined == "Hello, E#!"]
+    pass = pass && assert["Implicit Number Conversion", conversion == "Score: 99"]
+    return pass
+]
+
+Func test_arrays() [
+    Var numbers = [10, 20, 30]
+    
+    Var pass = true
+    pass = pass && assert["Initial Length", numbers.length == 3]
+    pass = pass && assert["Index Retrieval", numbers[1] == 20]
+    
+    numbers[0] = 99
+    pass = pass && assert["Index Mutation", numbers[0] == 99]
+    
+    numbers.append[40]
+    pass = pass && assert["Array Append Length", numbers.length == 4]
+    pass = pass && assert["Appended Value Retrieval", numbers[3] == 40]
+    
+    Var subset = numbers.slice[0, 2]
+    pass = pass && assert["Slice Length", subset.length == 2]
+    pass = pass && assert["Slice Lower Element", subset[0] == 99]
+    pass = pass && assert["Slice Upper Element", subset[1] == 20]
+    
+    return pass
+]
+
+Func test_conditionals(value) [
+    if value < 0 [
+        return "negative"
+    ] ELSE value == 0 [
+        return "zero"
+    ] ELSE [
+        return "positive"
+    ]
+]
+
+Func test_loops() [
+    Var counter = 3
+    Var countdown_sum = 0
+    loop (counter > 0) [
+        countdown_sum = countdown_sum + counter
+        counter = counter - 1
+    ]
+
+    Var iteration_count = 0
+    loop (5) [
+        iteration_count = iteration_count + 1
+    ]
+
+    Var stress_count = 0
+    loop (600) [
+        stress_count = stress_count + 1
+    ]
+
+    Var pass = true
+    pass = pass && assert["While Loop Evaluation", countdown_sum == 6]
+    pass = pass && assert["Numeric Loop Iterations", iteration_count == 5]
+    pass = pass && assert["600 Iteration Loop Limit", stress_count == 600]
+    return pass
+]
+
+Func test_math_module() [
+    Var pass = true
+    pass = pass && assert["Math SQRT", math.sqrt[81] == 9]
+    pass = pass && assert["Math POW", math.pow[2, 3] == 8]
+    pass = pass && assert["Math ABS", math.abs[-4.5] == 4.5]
+    pass = pass && assert["Math FLOOR", math.floor[4.9] == 4]
+    pass = pass && assert["Math CEIL", math.ceil[4.1] == 5]
+    pass = pass && assert["Math MAX", math.max[12, 42] == 42]
+    pass = pass && assert["Math MIN", math.min[12, 42] == 12]
+    return pass
+]
+
+Func test_lambda_module() [
+    Var double = LAMBDA(double)[fn value => [value * 2]]
+    Var result = double[5]
+    
+    Var pass = true
+    pass = pass && assert["Lambda Multiplier Execution", result == 10]
+    return pass
+]
+
+Func main() [
+    Studio.print["Starting E# Comprehensive Test Matrix..."]
+    
+    Var all_passed = true
+    
+    all_passed = all_passed && test_arithmetic[]
+    all_passed = all_passed && test_strings[]
+    all_passed = all_passed && test_arrays[]
+    
+    Var cond_neg = test_conditionals[-10] == "negative"
+    Var cond_zero = test_conditionals[0] == "zero"
+    Var cond_pos = test_conditionals[10] == "positive"
+    all_passed = all_passed && assert["Conditional Flow Logic", cond_neg && cond_zero && cond_pos]
+    
+    all_passed = all_passed && test_loops[]
+    all_passed = all_passed && test_math_module[]
+    all_passed = all_passed && test_lambda_module[]
+
+    if all_passed [
+        Studio.print["PASS: 600 iterations completed"]
+    ] ELSE [
+        Studio.print["FAIL: Test suite encountered one or more errors."]
+    ]
+]
